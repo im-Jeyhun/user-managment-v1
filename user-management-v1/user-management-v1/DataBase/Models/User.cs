@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using user_management_v1.DataBase.Repository;
 
 namespace user_management_v1.DataBase.Models
 {

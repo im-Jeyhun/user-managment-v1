@@ -27,9 +27,9 @@ namespace user_management_v1.DataBase.Repository
         private static List<User> Users { get; set; } = new List<User>()
         {
             new Admin("Super","Admin", "admin@gmail.com","123321" /*, false, true*/ ),
-            new User ("Ceyhun" , "Hacizada" , "ceyhun@gmail.com", "123456Az"),
+            new Admin ("Ceyhun" , "Hacizada" , "ceyhun@gmail.com", "123456Az"),
             new User ("Eli" , "Eliyev" , "elieliyev@gmail.com", "123321Eli"),
-            new User(reports)
+            
 
         };
         //normal user elave etmek.
@@ -87,6 +87,10 @@ namespace user_management_v1.DataBase.Repository
         public static void Delete(User user)
         {
             Users.Remove(user);
+        }
+        public static void DeleteAdmin(Admin admin)
+        {
+            Users.Remove(admin);
         }
         public static bool IsEmailExists(string email)
         {

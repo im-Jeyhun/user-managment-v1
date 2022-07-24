@@ -57,4 +57,5 @@ namespace user_management_v1.ApplicationLogic
 
             }
         }
+    }
 }

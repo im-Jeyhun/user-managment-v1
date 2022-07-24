@@ -22,7 +22,7 @@ namespace user_management_v1.ApplicationLogic
 
                 Console.WriteLine("Admin commands are : /add-user , /update-user ," +
                     " /remove-user , /reports, /add-admin," +
-                    "/show-admins,/update-admin, /make-admin , /remove-admin, /logout");
+                    "/show-admins,/update-admin, /make-admin , /remove-admin, /show-users, /logout");
 
                 Console.Write("Enter suitable command : ");
                 string command = Console.ReadLine();
@@ -33,49 +33,59 @@ namespace user_management_v1.ApplicationLogic
                 }
                 else if (command == "/update-user")
                 {
-                    Console.WriteLine("Enter email who u want to update");
-                    string updatedEmail = Console.ReadLine();
-                    User user1 = UserRepository.GetByEmail(email);
-                    if (user1.Email == email)
+                    while (true)
                     {
-                        Console.WriteLine("Deyismek isediyiniz user ile daxil olmusunuz");
-                    }
-                    else if (user1 == null)
-                    {
-                        Console.WriteLine("User tapilmadi");
-                    }
-                    else
-                    {
-                        if (user1 is User)
-                        {
-                            Admin updateUser = new Admin(UserValidation.GetName(), UserValidation.GetLastName());
-                            UserRepository.UpdateForAdmin(updatedEmail, updateUser);
-                            Console.WriteLine("Admin update olundu");
-                        }
-                        else if (user1 is Admin)
-                        {
-                            Console.WriteLine("Bu emaile mexsus istifadeci Admindir...");
-                        }
-                    }
+                        Console.WriteLine("Enter email who u want to update");
+                        string updatedUserEmail = Console.ReadLine();
+                        User updatedUser = UserRepository.GetByEmail(updatedUserEmail);
 
+                        if (updatedUser.Email == email)
+                        {
+                            Console.WriteLine("Deyismek isediyiniz admin ile daxil olmusunuz");
+                        }
+                        else if (updatedUser == null)
+                        {
+                            Console.WriteLine("Admin tapilmadi");
+                        }
+                        else
+                        {
+
+                            if (updatedUser is User)
+                            {
+                                User uppUser = new User(UserValidation.GetName(), UserValidation.GetLastName());
+                                UserRepository.UpdateForUser(updatedUserEmail, uppUser);
+                                Console.WriteLine("User update olundu");
+                                break;
+                            }
+                            else if (updatedUser is Admin)
+                            {
+                                Console.WriteLine("Bu emaile mexsus istifadeci Admindir...");
+                            }
+
+                        }
+                    }
                 }
                 else if (command == "/remove-user")
                 {
-                    Console.Write("Enter email who u want to delete : ");
-                    string deletedEmail = Console.ReadLine();
-                    User deletedUser = UserRepository.GetByEmail(deletedEmail);
-                    if (deletedUser == null)
+                    while (true)
                     {
-                        Console.WriteLine("Emaile gore istifadeci tapilmadi");
-                    }
-                    else if (deletedUser is Admin)
-                    {
-                        Console.WriteLine("Emaile gore tapilan istifadeci admindir ...");
-                    }
-                    else
-                    {
-                        UserRepository.Delete(deletedUser);
-                        Console.WriteLine("User deleted succesfully");
+                        Console.Write("Enter email who u want to delete : ");
+                        string deletedEmail = Console.ReadLine();
+                        User deletedUser = UserRepository.GetByEmail(deletedEmail);
+                        if (deletedUser == null)
+                        {
+                            Console.WriteLine("Emaile gore istifadeci tapilmadi");
+                        }
+                        else if (deletedUser is Admin)
+                        {
+                            Console.WriteLine("Emaile gore tapilan istifadeci admindir ...");
+                        }
+                        else
+                        {
+                            UserRepository.Delete(deletedUser);
+                            Console.WriteLine("User deleted succesfully");
+                            break;
+                        }
                     }
                 }
                 else if (command == "/reports")
@@ -89,9 +99,9 @@ namespace user_management_v1.ApplicationLogic
                 }
                 else if (command == "/add-admin")
                 {
-
                     Admin newAdmin = new Admin(UserValidation.GetName(), UserValidation.GetLastName(), UserValidation.GetEmail(), UserValidation.GetPassword());
                     UserRepository.Add(newAdmin);
+                    Console.WriteLine($"New admin added succesfully {newAdmin.GetUserInfo()} ");
                 }
                 else if (command == "/show-admins")
                 {
@@ -107,59 +117,71 @@ namespace user_management_v1.ApplicationLogic
                 }
                 else if (command == "/update-admin")
                 {
-                    Console.WriteLine("Enter admin email which u want to update admin's details");
-                    string updatedAdmin = Console.ReadLine();
-                    User admin = UserRepository.GetByEmail(updatedAdmin);
-                    if (admin.Email == email)
+                    while (true)
                     {
-                        Console.WriteLine("Deyismek isediyiniz admin ile daxil olmusunuz");
-                    }
-                    else if (admin == null)
-                    {
-                        Console.WriteLine("Admin tapilmadi");
-                    }
-                    else
-                    {
-                        if (admin is Admin)
+                        Console.WriteLine("Enter admin email which u want to update admin's details");
+                        string updatedAdmin = Console.ReadLine();
+                        User admin = UserRepository.GetByEmail(updatedAdmin);
+                        if (admin.Email == email)
                         {
-                            Admin uppAdmin = new Admin(UserValidation.GetName(), UserValidation.GetLastName());
-                            UserRepository.UpdateForAdmin(updatedAdmin, uppAdmin);
-                            Console.WriteLine("Admin update olundu");
+                            Console.WriteLine("Deyismek isediyiniz admin ile daxil olmusunuz");
                         }
-                        else if (admin is User)
+                        else if (admin == null)
                         {
-                            Console.WriteLine("Bu emaile mexsus istifadeci Userdir...");
+                            Console.WriteLine("Admin tapilmadi");
                         }
-                    }
+                        else
+                        {
 
+                            if (admin is Admin)
+                            {
+                                Admin uppAdmin = new Admin(UserValidation.GetName(), UserValidation.GetLastName());
+                                UserRepository.UpdateForAdmin(updatedAdmin, uppAdmin);
+                                Console.WriteLine("Admin update olundu");
+                                break;
+                            }
+                            else if (admin is User)
+                            {
+                                Console.WriteLine("Bu emaile mexsus istifadeci Userdir...");
+                            }
+
+                        }
+                    }
                 }
                 else if (command == "/remove-admin")
                 {
-                    Console.WriteLine("Enter Admin email for remove Admin : ");
-                    string adminEmail = Console.ReadLine();
-
-                    User adminEmaill = UserRepository.GetByEmail(adminEmail);
-
-                    if (adminEmaill.Email == adminEmail)
+                    while (true)
                     {
-                        Console.WriteLine("Silmek istediyiniz admin istifadecisindesiz");
-                    }
-                    else
-                    {
-                        if (adminEmaill == null)
+                        Console.WriteLine("Enter Admin email for remove Admin : ");
+                        string removedAdminEmail = Console.ReadLine();
+
+                        Admin findedAdmin = UserRepository.GetByEmailForAdmin(removedAdminEmail);
+                        //User findedAdmin = UserRepository.GetByEmail(removedAdminEmail);
+
+                        if (findedAdmin.Email == removedAdminEmail)
                         {
+                            Console.WriteLine("Silmek istediyiniz admin istifadecisindesiz");
+                        }
+                        else if (findedAdmin == null)
+                        {
+
                             Console.WriteLine("Admin tapilmadi bu emaile");
                         }
-                        else if (adminEmaill is User)
+                        else
                         {
-                            Console.WriteLine("Istifadeci Adi userdi");
-                        }
-                        else if (adminEmaill is Admin)
-                        {
-                            UserRepository.Delete(adminEmaill);
-                            Console.WriteLine("Admin silindi");
-                        }
+
+                            if (findedAdmin is User)
+                            {
+                                Console.WriteLine("Istifadeci Adi userdi");
+                            }
+                            else if (findedAdmin is Admin)
+                            {
+                                UserRepository.Delete(findedAdmin);
+                                Console.WriteLine("Admin silindi");
+                                break ;
+                            }
                     }
+                }
                 }
                 else if (command == "/make-admin")
                 {
@@ -177,6 +199,18 @@ namespace user_management_v1.ApplicationLogic
                         Admin admin1 = new Admin(user1.Name, user1.LastName, user1.Email, user1.Password, user1.Id);
 
                         UserRepository.Add(admin1);
+                    }
+                }
+                else if (command == "/show-users")
+                {
+                    List<User> showedUser = UserRepository.GetAll();
+                    foreach (User users in showedUser)
+                    {
+                        if (users is User)
+                        {
+                            Console.WriteLine(users.GetUserInfo());
+                        }
+
                     }
                 }
 
@@ -203,7 +237,7 @@ namespace user_management_v1.ApplicationLogic
                 {
                     if (user.Email == email)
                     {
-                        User updateUser = new User(UserValidation.GetName(), Authentication.UserValidation());
+                        User updateUser = new User(UserValidation.GetName(), UserValidation.GetLastName());
                         UserRepository.UpdateForUser(email, updateUser);
                     }
                 }
