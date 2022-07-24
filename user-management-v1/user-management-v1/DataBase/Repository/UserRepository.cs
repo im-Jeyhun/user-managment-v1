@@ -65,13 +65,13 @@ namespace user_management_v1.DataBase.Repository
             return admin;
         }
         public static Report AddReport(string fromwho, string towho, string text)
-        {
-
-            List<Report> reports = new List<Report>();
+        {        
             Report report = new Report(fromwho, towho, text);
             reports.Add(report);
             return report;
         }
+
+        
 
 
         public static void Remove(string email)

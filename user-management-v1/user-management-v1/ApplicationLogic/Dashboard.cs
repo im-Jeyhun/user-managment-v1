@@ -256,7 +256,7 @@ namespace user_management_v1.ApplicationLogic
                     else
                     {
 
-                        Report reporT = UserRepository.AddReport(email, reporter.Email, reportText);
+                        Report report = UserRepository.AddReport(email, reporter.Email, reportText);
 
 
                     }
