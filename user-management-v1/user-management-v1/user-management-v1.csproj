@@ -6,8 +6,4 @@
     <RootNamespace>user_management_v1</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="ApplicationLogic\Validation\" />
-  </ItemGroup>
-
 </Project>
