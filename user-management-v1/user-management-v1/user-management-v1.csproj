@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="ApplicationLogic\Validation\" />
-    <Folder Include="DataBase\Repository\" />
   </ItemGroup>
 
 </Project>
