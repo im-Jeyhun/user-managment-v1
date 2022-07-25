@@ -178,10 +178,10 @@ namespace user_management_v1.ApplicationLogic
                             {
                                 UserRepository.Delete(findedAdmin);
                                 Console.WriteLine("Admin silindi");
-                                break ;
+                                break;
                             }
+                        }
                     }
-                }
                 }
                 else if (command == "/make-admin")
                 {
@@ -206,14 +206,17 @@ namespace user_management_v1.ApplicationLogic
                     List<User> showedUser = UserRepository.GetAll();
                     foreach (User users in showedUser)
                     {
-                        if (users is User)
+                        if (users == null)
+                        {
+                            Console.WriteLine("Istifadeci tapilmadi");
+                        }
+                        else if (users is User)
                         {
                             Console.WriteLine(users.GetUserInfo());
                         }
 
                     }
                 }
-
                 else if (command == "/logout")
                 {
                     Program.Main(new string[] { });

@@ -20,16 +20,16 @@ namespace user_management_v1.DataBase.Repository
             }
 
         }
-        private static List<Report> reports = new List<Report>()
-        {
-            new Report("ceyhunhaciada@gmail.com", "elieliyev@gmail.com" , "yatib qalmisan yene ")
-        };
+        //private static List<Report> reports = new List<Report>()
+        //{
+        //    new Report("ceyhunhaciada@gmail.com", "elieliyev@gmail.com" , "yatib qalmisan yene ")
+        //};
         private static List<User> Users { get; set; } = new List<User>()
         {
             new Admin("Super","Admin", "admin@gmail.com","123321" /*, false, true*/ ),
             new Admin ("Ceyhun" , "Hacizada" , "ceyhun@gmail.com", "123456Az"),
             new User ("Eli" , "Eliyev" , "elieliyev@gmail.com", "123321Eli"),
-            
+
 
         };
         //normal user elave etmek.
@@ -65,13 +65,13 @@ namespace user_management_v1.DataBase.Repository
             return admin;
         }
         public static Report AddReport(string fromwho, string towho, string text)
-        {        
+        {
             Report report = new Report(fromwho, towho, text);
-            reports.Add(report);
+            User.Reports.Add(report);
             return report;
         }
 
-        
+
 
 
         public static void Remove(string email)
@@ -142,7 +142,8 @@ namespace user_management_v1.DataBase.Repository
         }
         public static List<Report> GetReports()
         {
-            return reports;
+
+            return User.Reports;
         }
         public static List<User> GetAll()
         {

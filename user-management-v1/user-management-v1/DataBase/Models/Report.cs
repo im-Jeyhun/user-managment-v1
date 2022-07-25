@@ -28,7 +28,7 @@ namespace user_management_v1.DataBase.Models
             IsReporterAdmin = ısReporterAdmin;
         }
 
-        public virtual string GetReportInfoForUser()
+        public string GetReportInfoForUser()
         {
             return $"Sira No {Sira} , Kimden : {FromWho} , Kime : {ToWho} , Text : {Text} ,Sikayet olunan admindir mi {IsReporterAdmin} Report time : {ReportTime}";
 

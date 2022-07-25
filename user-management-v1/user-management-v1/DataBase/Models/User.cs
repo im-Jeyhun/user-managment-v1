@@ -20,7 +20,7 @@ namespace user_management_v1.DataBase.Models
 
         public string Password { get; set; }
 
-        public List<Report> Reports { get; set; }
+        public static List<Report> Reports { get; set; } = new List<Report>();
         protected DateTime RegistrationDate { get; } = DateTime.Now;
 
       
