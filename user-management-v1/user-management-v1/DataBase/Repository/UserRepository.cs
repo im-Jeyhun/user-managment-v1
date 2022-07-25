@@ -22,7 +22,7 @@ namespace user_management_v1.DataBase.Repository
         }
         private static List<Report> reports = new List<Report>()
         {
-            new Report("ceyhunhaciada@gmail.com", "elieliyev@gmail.com" , "yatib qalmisan yene pulek")
+            new Report("ceyhunhaciada@gmail.com", "elieliyev@gmail.com" , "yatib qalmisan yene ")
         };
         private static List<User> Users { get; set; } = new List<User>()
         {
