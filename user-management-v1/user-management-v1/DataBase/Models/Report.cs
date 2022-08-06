@@ -3,40 +3,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using user_management_v1.DataBase.Models.Common;
+using user_management_v1.DataBase.Repository;
 
 namespace user_management_v1.DataBase.Models
 {
-    public class Report
+    public class Report : Entity<Guid>
     {
-        public static int _sira = 1;
-        public int Sira { get; set; }
-        public string FromWho { get; set; }
+        //public int Id { get; set; }
 
-        public string ToWho { get; set; }
+        public User From { get; set; }
+
+        public User To { get; set; }
+
         public string Text { get; set; }
 
-        public bool IsReporterAdmin { get; set; }
         public DateTime ReportTime { get; set; }
 
-        public Report(string fromWho, string toWho, string text, bool ısReporterAdmin = false)
+        public Report(User fromWho, User toWho, string text)
         {
-            Sira = _sira++;
-            FromWho = fromWho;
-            ToWho = toWho;
+
+            From = fromWho;
+            To = toWho;
             Text = text;
             ReportTime = DateTime.Now;
-            IsReporterAdmin = ısReporterAdmin;
+            Id = Guid.NewGuid();
         }
 
-        public string GetReportInfoForUser()
+        public string GetReportInfo()
         {
-            return $"Sira No {Sira} , Kimden : {FromWho} , Kime : {ToWho} , Text : {Text} ,Sikayet olunan admindir mi {IsReporterAdmin} Report time : {ReportTime}";
+            return $"Kimden : {From.Email} , Kime : {To.Email} , Text : {Text} , Sikayet olunan admindir mi {To is Admin} Report time : {ReportTime}";
 
         }
-        public string GetReportInfoForAdmn()
-        {
-            return $"Sira No {Sira} , Kimden : {FromWho} , Kime : {ToWho} , Text : {Text} ,Sikayet olunan admindir mi {IsReporterAdmin = true} Report time : {ReportTime}";
-
-        }
+      
     }
 }

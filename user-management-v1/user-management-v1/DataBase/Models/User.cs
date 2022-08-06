@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using user_management_v1.DataBase.Models.Common;
 using user_management_v1.DataBase.Repository;
 
 namespace user_management_v1.DataBase.Models
 {
-    public class User
+    public class User : Entity<int>
     {
 
-        public int Id { get; private set; }
- 
+        //public int Id { get; private set; }
+
         public string Name { get; set; }
 
         public string LastName { get; set; }
@@ -23,21 +24,30 @@ namespace user_management_v1.DataBase.Models
         public static List<Report> Reports { get; set; } = new List<Report>();
         protected DateTime RegistrationDate { get; } = DateTime.Now;
 
-      
+
         public User(List<Report> report)
         {
             Reports = report;
         }
 
         //bu sildikden sonra elavet etmek ucun
-        public User(string name, string lastName, string email, string password, int id)
+        public User(string name, string lastName, string email, string password, int? id = null)
         {
-          
+
             Name = name;
             LastName = lastName;
             Email = email;
             Password = password;
-            Id = id;       
+            if (id != null)
+            {
+
+                Id = id.Value;
+            }
+            else
+            {
+
+                Id = UserRepository.IdCounter;
+            }
 
         }
         // bu normal elave etmek ucun.
@@ -47,7 +57,6 @@ namespace user_management_v1.DataBase.Models
             LastName = lastName;
             Email = email;
             Password = password;
-            Id = UserRepository.IdCounter;
         }
 
         public User(string name, string lastName)

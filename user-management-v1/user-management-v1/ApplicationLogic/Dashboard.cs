@@ -4,16 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using user_management_v1.ApplicationLogic.Validation;
+using user_management_v1.DataBase.Enums;
 using user_management_v1.DataBase.Models;
 using user_management_v1.DataBase.Repository;
+using user_management_v1.DataBase.Repository.Common;
 using user_management_v1.UI;
 
 namespace user_management_v1.ApplicationLogic
 {
     public partial class Dashboard
     {
+        public static User CurrentUser { get; set; }
         public static void AdminPanel(string email)
         {
+            Repository<User, int> userrepository = new Repository<User, int>();
+            Repository<Admin, int> adminrepository = new Repository<Admin, int>();
+            Repository<Blog, int> blogrepo = new Repository<Blog, int>();
+
             User user = UserRepository.GetByEmail(email);
             Console.WriteLine($"Welcome admin : {user.GetUserInfo()}");
             while (true)
@@ -82,7 +89,7 @@ namespace user_management_v1.ApplicationLogic
                         }
                         else
                         {
-                            UserRepository.Delete(deletedUser);
+                            userrepository.Delete(deletedUser);
                             Console.WriteLine("User deleted succesfully");
                             break;
                         }
@@ -90,23 +97,37 @@ namespace user_management_v1.ApplicationLogic
                 }
                 else if (command == "/reports")
                 {
-                    List<Report> reportList = UserRepository.GetReports();
+                    List<Report> reportList = ReportRepository.GetReports();
+                    int counter = 1;
 
                     foreach (Report report in reportList)
                     {
-                        Console.WriteLine(report.GetReportInfoForAdmn());
+                        Console.WriteLine($"Sira no : {counter}{report.GetReportInfo()}");
+                        counter++;
                     }
                 }
                 else if (command == "/add-admin")
                 {
                     Admin newAdmin = new Admin(UserValidation.GetName(), UserValidation.GetLastName(), UserValidation.GetEmail(), UserValidation.GetPassword());
-                    UserRepository.Add(newAdmin);
+                    adminrepository.Add(newAdmin);
                     Console.WriteLine($"New admin added succesfully {newAdmin.GetUserInfo()} ");
                 }
                 else if (command == "/show-admins")
                 {
-                    List<User> admin = UserRepository.GetAll();
+                    List<User> admin = userrepository.GetAll();
 
+                    //for (int i = 0; i < Admin._sira-1; i++)
+                    //{
+                    //    for (int j = 0; j < Admin._sira - 1; j++)
+                    //    {
+                    //        if (Admin._sira > Admin._sira+1)
+                    //        {
+                    //            Admin._sira newadmin;
+                    //            Admin._sira = Admin._sira + 1;
+                    //            Admin._sira + 1 = newadmin;
+                    //        }
+                    //    }
+                    //}
                     foreach (User admins in admin)
                     {
                         if (admins is Admin)
@@ -176,7 +197,7 @@ namespace user_management_v1.ApplicationLogic
                             }
                             else if (findedAdmin is Admin)
                             {
-                                UserRepository.Delete(findedAdmin);
+                                adminrepository.Delete(findedAdmin);
                                 Console.WriteLine("Admin silindi");
                                 break;
                             }
@@ -194,16 +215,17 @@ namespace user_management_v1.ApplicationLogic
                     }
                     else
                     {
-                        UserRepository.Delete(user1);
+
+                        userrepository.Delete(user1);
 
                         Admin admin1 = new Admin(user1.Name, user1.LastName, user1.Email, user1.Password, user1.Id);
 
-                        UserRepository.Add(admin1);
+                        adminrepository.Add(admin1);
                     }
                 }
                 else if (command == "/show-users")
                 {
-                    List<User> showedUser = UserRepository.GetAll();
+                    List<User> showedUser = userrepository.GetAll();
                     foreach (User users in showedUser)
                     {
                         if (users == null)
@@ -217,6 +239,53 @@ namespace user_management_v1.ApplicationLogic
 
                     }
                 }
+                else if (command == "/show-blogs")
+                {
+
+                    List<Blog> blogs = blogrepo.GetAll();
+
+                    foreach (Blog blog in blogs)
+                    {
+                        Console.WriteLine(blog.GetBlogInfo());
+                    }
+
+                    Console.WriteLine("Enter command for update blog status");
+                    string secondCommand = Console.ReadLine();
+                    if (secondCommand == "/choose-bloh")
+                    {
+                        Console.WriteLine("Enter chosed blog id : ");
+                        int id = Convert.ToInt32(Console.ReadLine());
+                        Repository<Blog, int> blogrepeo = new Repository<Blog, int>();
+                        Blog chosedblog = blogrepeo.GetById(id);
+
+                        if (chosedblog != null && chosedblog.BlogStatus == BlogStatus.Sended)
+                        {
+                            Console.WriteLine("Chose Approved or Rejected");
+                            string status = Console.ReadLine();
+
+                            if (status == "Approved")
+                            {
+                                chosedblog.BlogStatus = BlogStatus.Approved;
+
+                            }
+                            else if (status == "Rejected")
+                            {
+                                chosedblog.BlogStatus = BlogStatus.Rejected;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Command not found");
+                            }
+
+
+                        }
+
+
+                    }
+
+
+
+                }
                 else if (command == "/logout")
                 {
                     Program.Main(new string[] { });
@@ -229,11 +298,14 @@ namespace user_management_v1.ApplicationLogic
     {
         public static void UserPanel(string email)
         {
+            Repository<Blog, int> blogrepeo = new Repository<Blog, int>();
+
+
             User user = UserRepository.GetByEmail(email);
             Console.WriteLine($"User succesfully joined : {user.GetUserInfo()}");
             while (true)
             {
-                Console.WriteLine("User commands are : /update-info , /report-user , /logout");
+                Console.WriteLine("User commands are : /update-info , /report-user , /logout , /add-blog");
                 string command = Console.ReadLine();
 
                 if (command == "/update-info")
@@ -247,22 +319,81 @@ namespace user_management_v1.ApplicationLogic
                 else if (command == "/report-user")
                 {
                     Console.WriteLine("Enter report etmek istediyin adamin mailini");
-                    string reporingEmail = Console.ReadLine();
+                    string toWho = Console.ReadLine();
                     Console.WriteLine("Enter report text : ");
                     string reportText = ReportValidation.GetReportText();
-                    User reporter = UserRepository.GetByEmail(reporingEmail);
 
-                    if (reporter.Email == email)
+                    User reporter = UserRepository.GetByEmail(toWho);
+                    if (reporter == null)
                     {
-                        Console.WriteLine("User ozu ozunu report ede bilmez");
+                        Console.WriteLine("Report etmediyiniz istifadeci tapilmadi...");
+                    }
+                    else if (reporter == CurrentUser)
+                    {
+                        Console.WriteLine("Oz ozunuzu sikayet ede bilmezsiniz");
                     }
                     else
                     {
-
-                        Report report = UserRepository.AddReport(email, reporter.Email, reportText);
-
-
+                        ReportRepository.AddReport(CurrentUser, reporter, reportText);
+                        Console.WriteLine("User report olundu..");
                     }
+
+
+
+                }
+                else if (command == "/add-blog")
+                {
+                    Console.WriteLine($"Dear {user.Name} Add your blog's title");
+                    string blogTitle = Console.ReadLine();
+                    Console.WriteLine(" Add your blog  ");
+                    string blogContent = Console.ReadLine();
+
+
+                    BlogRepository.AddBlog(user, blogTitle, blogContent);
+
+
+                }
+                else if (command == "/show-own-blogs")
+                {
+
+                    List<Blog> blogs = blogrepeo.GetAll();
+
+                    foreach (Blog blog in blogs)
+                    {
+                        if (blog.Owner == user)
+                        {
+                            Console.WriteLine(blog.GetBlogInfo());
+                        }
+                    }
+                    Console.WriteLine("Whould u like to delete or update your blog (/delete , /update )");
+                    string blogCom = Console.ReadLine();
+                    Console.WriteLine("Insert id for delete or update");
+                    int repId = Convert.ToInt32(Console.ReadLine());
+                    Blog findedblog = blogrepeo.GetById(repId);
+                    if (blogCom == "/delete")
+                    {
+                        blogrepeo.Delete(findedblog);
+                        Console.WriteLine("Silindi");
+                    }
+                    else if (blogCom == "/update")
+                    {
+                        Console.WriteLine("Enter changed title");
+                        string changedTittle = Console.ReadLine();
+                        Console.WriteLine("Enter changed content");
+                        string changedContent = Console.ReadLine();
+                        Blog newblog = new Blog(findedblog.Owner , findedblog.BlogStatus, changedTittle ,changedContent , findedblog.Id);
+                        //blogrepeo.Update(findedblog.Id, newblog);
+                        blogrepeo.Update(findedblog.Id, newblog);
+                     
+
+                        Console.WriteLine("Blog updated..");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Command not found");
+                        continue;
+                    }
+
                 }
                 else if (command == "/logout")
                 {

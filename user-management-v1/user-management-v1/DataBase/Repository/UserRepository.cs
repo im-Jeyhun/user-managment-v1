@@ -7,7 +7,7 @@ using user_management_v1.DataBase.Models;
 
 namespace user_management_v1.DataBase.Repository
 {
-    public class UserRepository
+    public class UserRepository : Common.Repository<User , int>
     {
         private static int _idCounter;
 
@@ -20,24 +20,27 @@ namespace user_management_v1.DataBase.Repository
             }
 
         }
-        //private static List<Report> reports = new List<Report>()
-        //{
-        //    new Report("ceyhunhaciada@gmail.com", "elieliyev@gmail.com" , "yatib qalmisan yene ")
-        //};
-        private static List<User> Users { get; set; } = new List<User>()
+
+        static UserRepository()
         {
-            new Admin("Super","Admin", "admin@gmail.com","123321" /*, false, true*/ ),
-            new Admin ("Ceyhun" , "Hacizada" , "ceyhun@gmail.com", "123456Az"),
-            new User ("Eli" , "Eliyev" , "elieliyev@gmail.com", "123321Eli"),
+            SeedUsers();
+        }
+
+        public static void SeedUsers()
+        {
+            Entries.Add(new User("ceyhun", "hacizada", "ceyhun@gmail.com", "123321", 1));
+            Entries.Add(new Admin("ceyhun", "hacizada", "ceyhunhaci@gmail.com", "123321", 1));
 
 
-        };
+        }
+
+
         //normal user elave etmek.
         public static User Add(string name, string lastName, string email, string password)
         {
 
             User user = new User(name, lastName, email, password, IdCounter);
-            Users.Add(user);
+            Entries.Add(user);
             return user;
         }
 
@@ -46,55 +49,50 @@ namespace user_management_v1.DataBase.Repository
         {
 
             User user = new User(name, lastName, email, password, id);
-            Users.Add(user);
+            Entries.Add(user);
             return user;
         }
 
 
 
-        public static User Add(User user)
-        {
-            Users.Add(user);
-            return user;
-        }
+        //public static User Add(User user)
+        //{
+        //    Users.Add(user);
+        //    return user;
+        //}
 
 
-        public static User Add(Admin admin)
-        {
-            Users.Add(admin);
-            return admin;
-        }
-        public static Report AddReport(string fromwho, string towho, string text)
-        {
-            Report report = new Report(fromwho, towho, text);
-            User.Reports.Add(report);
-            return report;
-        }
+        //public static User Add(Admin admin)
+        //{
+        //    Users.Add(admin);
+        //    return admin;
+        //}
+
 
 
 
 
         public static void Remove(string email)
         {
-            foreach (User user1 in Users)
+            foreach (User user1 in Entries)
             {
                 if (user1.Email == email)
                 {
-                    Users.Remove(user1);
+                    Entries.Remove(user1);
                 }
             }
         }
-        public static void Delete(User user)
-        {
-            Users.Remove(user);
-        }
-        public static void DeleteAdmin(Admin admin)
-        {
-            Users.Remove(admin);
-        }
+        //public static void Delete(User user)
+        //{
+        //    Users.Remove(user);
+        //}
+        //public static void DeleteAdmin(Admin admin)
+        //{
+        //    Users.Remove(admin);
+        //}
         public static bool IsEmailExists(string email)
         {
-            foreach (User user in Users)
+            foreach (User user in Entries)
             {
                 if (user.Email == email)
                 {
@@ -106,7 +104,7 @@ namespace user_management_v1.DataBase.Repository
 
         public static User GetByEmail(string email)
         {
-            foreach (User user in Users)
+            foreach (User user in Entries)
             {
                 if (user.Email == email)
                 {
@@ -118,7 +116,7 @@ namespace user_management_v1.DataBase.Repository
 
         public static Admin GetByEmailForAdmin(string email)
         {
-            foreach (Admin admin in Users)
+            foreach (Admin admin in Entries)
             {
                 if (admin.Email == email)
                 {
@@ -130,7 +128,7 @@ namespace user_management_v1.DataBase.Repository
 
         public static bool IsUserExistsByEmailAndPassword(string email, string password)
         {
-            foreach (User user in Users)
+            foreach (User user in Entries)
             {
                 if (user.Email == email && user.Password == password)
                 {
@@ -140,15 +138,12 @@ namespace user_management_v1.DataBase.Repository
             return false;
 
         }
-        public static List<Report> GetReports()
-        {
 
-            return User.Reports;
-        }
-        public static List<User> GetAll()
-        {
-            return Users;
-        }
+        //public static List<User> GetAll()
+        //{
+        //    return Users;
+        //}
+
 
         public static User UpdateForUser(string email, User user)
         {
